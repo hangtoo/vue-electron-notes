@@ -5,7 +5,7 @@ import store from './store'
 import '@/plugin/element-ui'
 import '@/plugin/fortawesome'
 import '@/plugin/mavonEditor'
-import '@/plugin/datastore'
+// import '@/plugin/datastore'
 
 Vue.config.productionTip = false
 

@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
 import FileSearch from '@/components/FileSearch'
 import FileList from '@/components/FileList'
 import FileEdit from '@/components/FileEdit'
@@ -87,19 +86,16 @@ export default {
     },
     // 获取笔记列表
     async getFileList(query = {}) {
-      const list = await this.$db.markdown.find(query).sort({ isTop: -1, updatedAt: -1 })
-      // 格式化时间，添加内容备份字段
-      this.fileList = list.map(item => {
-        item.originalContent = item.content
-        item.createdAt = dayjs(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
-        item.updatedAt = dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')
-        return item
+      window.markdown.find(query).then(data => {
+        console.log(data) // 这里将打印出nedb数据库查询到的数据
+        // 格式化时间，添加内容备份字段
+        this.fileList = data
       })
     },
     // 新增笔记
     fileCreate() {
       const defaultFile = { title: '无标题笔记', content: '', isTop: false }
-      this.$db.markdown.insert(defaultFile).then(async () => {
+      window.markdown.insert(defaultFile).then(async () => {
         await this.getFileList()
         const [firstFileItem] = this.fileList
         this.fileItem = firstFileItem
@@ -109,7 +105,7 @@ export default {
     // 修改标题
     updateTitle(title) {
       const { _id } = this.fileItem
-      this.$db.markdown.update({ _id, title: { $ne: title } }, { $set: { title } }).then(() => {
+      window.markdown.update({ _id, title: { $ne: title } }, { $set: { title } }).then(() => {
         this.refreshList()
       })
     },
@@ -119,7 +115,7 @@ export default {
       if (originalContent === content) return
       if (this.timerId) clearTimeout(this.timerId)
       this.timerId = setTimeout(() => {
-        this.$db.markdown.update({ _id, content: { $ne: content } }, { $set: { content } }).then(() => {
+        window.markdown.update({ _id, content: { $ne: content } }, { $set: { content } }).then(() => {
           this.refreshList()
         })
       }, 1000)
@@ -133,7 +129,7 @@ export default {
       })
         .then(() => {
           const { _id } = this.selectedFile
-          this.$db.markdown
+          window.markdown
             .remove({ _id })
             .then(num => {
               this.$message.success(`删除了${num}个项目`)
@@ -148,7 +144,7 @@ export default {
     // 笔记置顶
     handleFileTop() {
       const { _id, isTop } = this.selectedFile
-      this.$db.markdown.update({ _id }, { $set: { isTop: !isTop } }).then(() => {
+      window.markdown.update({ _id }, { $set: { isTop: !isTop } }).then(() => {
         this.init()
       })
     },

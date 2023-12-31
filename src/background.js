@@ -3,6 +3,7 @@ import {
   createProtocol
   /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib'
+import path from 'path'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -21,7 +22,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
-      contextIsolation: false
+      contextIsolation: true,
+      preload: path.join(__dirname, './preload.js')
     }
   })
 
