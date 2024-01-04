@@ -1,4 +1,4 @@
-import { app, protocol, BrowserWindow,ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import {
   createProtocol
   /* installVueDevtools */
@@ -45,11 +45,7 @@ function createWindow() {
   const userDataPath = app.getPath('userData')
   const dbPath = path.join(userDataPath, 'myDatabase.db')
 
-  ipcMain.handle('get-db-path', () => {
-    return dbPath;
-  });
-
-
+  ipcMain.handle('get-db-path', () => dbPath)
 }
 
 // Quit when all windows are closed.

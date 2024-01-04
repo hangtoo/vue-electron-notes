@@ -1,8 +1,7 @@
-const { contextBridge,ipcRenderer } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron')
 const Datastore = require('nedb-promises')
 const dayjs = require('dayjs')
 const crypto = require('crypto')
-const path = require('path')
 
 const algorithm = 'aes-128-cbc' // 加密算法类型
 const password = 'vue-electron-notes' // 用于生成秘钥的密码
@@ -10,7 +9,7 @@ const key = crypto.scryptSync(password, 'salt', 16) // 秘钥
 const iv = Buffer.alloc(16, 0) // 初始化向量
 
 // 获取数据库路径
-ipcRenderer.invoke('get-db-path').then((dbPath) => {
+ipcRenderer.invoke('get-db-path').then(dbPath => {
   // 在这里你可以将路径传递给一个专门处理数据库操作的模块或者函数
   // 注意：实际操作数据库应依然在主进程中进行，并通过 IPC 与渲染进程通信
   const db = {
@@ -64,9 +63,4 @@ ipcRenderer.invoke('get-db-path').then((dbPath) => {
     }
 
   })
-
-
-
-});
-
-
+})
